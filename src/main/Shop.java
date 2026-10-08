@@ -32,7 +32,7 @@ public class Shop {
 
 	public Shop() {
 		inventory = new ArrayList<Product>();
-		sales = new ArrayList<Sale>();
+		sales = new ArrayList<Sale>();  
 	}
 	
 	
