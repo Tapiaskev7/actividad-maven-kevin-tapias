@@ -27,6 +27,7 @@ public class Shop {
 	private ArrayList<Sale> sales;
 	private int numberSales;
 
+	
 	final static double TAX_RATE = 1.04;
 	private static final String ITEMS_FILE = "items.txt";
 
