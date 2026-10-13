@@ -1,5 +1,7 @@
 package main;
 
+// Commit de preparació
+
 import model.Product;
 import model.Sale;
 import model.Amount;
@@ -227,7 +229,7 @@ public class Shop {
 		try {
 			BufferedReader bf = new BufferedReader(new FileReader(f));
 			String Linea = "";
-			while ((Linea = bf.readLine()) != null)
+			//while ((Linea = bf.readLine()) != null)
 			{
 				
 			}
