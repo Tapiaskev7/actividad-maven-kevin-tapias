@@ -361,7 +361,31 @@ public class Shop {
 	 */
 	public void removeProduct() {
 		// TODO RA1-ISSUE-08: retirar un Product de inventory sense alterar la resta.
-		System.out.println("RA1-ISSUE-08 pendent: encara no es poden eliminar articles.");
+		Scanner scanner = CONSOLE;
+
+	    scanner.nextLine();
+
+	    System.out.println("Productes disponibles:");
+	    for (Product producte : inventory) {
+	        System.out.println(producte.getName());
+	    }
+
+	    System.out.print("Introdueix el nom del producte que vols eliminar: ");
+	    String nom = scanner.nextLine().trim();
+
+	    Product producte = findProduct(nom);
+
+	    if (producte != null) {
+	        inventory.remove(producte);
+	        System.out.println("Producte eliminat correctament.");
+	    } else {
+	        System.out.println("No s'ha trobat el producte: " + nom);
+	    }
+
+	    System.out.println("Productes restants:");
+	    for (Product producteRestant : inventory) {
+	        System.out.println(producteRestant.getName());
+	    }
 	}
 
 	/**
