@@ -224,35 +224,92 @@ public class Shop {
 	 */
 	private void readInventory() {
 		System.out.println(System.getProperty("user.dir") + File.separator + "src" + File.separator + "model" + File.separator + "files" + File.separator + ITEMS_FILE);
-		File f = new File(System.getProperty("user.dir") + File.separator + "files" + File.separator + ITEMS_FILE);
+		File f = new File("src" + File.separator + "model" + File.separator + "files" + File.separator + ITEMS_FILE);
 		
 
 		// TODO RA1-ISSUE-03: obrir el fitxer, llegir-lo linia a linia i afegir cada producte a inventory.
-		try {
-			BufferedReader bf = new BufferedReader(new FileReader(f));
-			String Linea = "";
-			//while ((Linea = bf.readLine()) != null)
-			{
+		try (BufferedReader bf = new BufferedReader(new FileReader(f))) {
+			String linea;
+			
+			while ((linea = bf.readLine()) != null) {
+				Product product = parseProductLine(linea);
 				
+				if (product != null) {
+					addProduct(product);
+				}
 			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+		} catch (IOException e) {
+			System.out.println("Error en llegir el fitxer: " + f.getPath());
 		}
 		
 		
 		// TODO RA1-ISSUE-04: delegar la conversio de cada linia a parseProductLine.
 		// TODO RA1-ISSUE-11: tractar fitxer absent o error de lectura amb un missatge comprensible.
-		System.out.println("RA1-ISSUE-03 pendent: encara no s'ha carregat " + f.getPath());
+		// System.out.println("RA1-ISSUE-03 pendent: encara no s'ha carregat " + f.getPath());
 	}
 
 	/**
 	 * Convert a valid line from items.txt into a Product.
 	 */
 	private Product parseProductLine(String line) {
+		
 		// TODO RA1-ISSUE-04: validar camps, convertir preu i estoc, i retornar un Product.
 		// TODO RA1-ISSUE-05: decidir com es tracten les linies mal formades.
-		return null;
+		
+		String[] camps = line.split(";");
+		
+		String nom = "Introdueix_nom";
+		double preu = 0.0;
+		int estoc = 0;
+		
+		if (!line.contains("Item:") ||
+			    !line.contains("Wholesaler Price:") ||
+			    !line.contains("Stock:")) {
+
+			    System.out.println("Error: falta un campo obligatorio en: " + line);
+			    return null;
+			}
+		
+		for (String camp : camps) {
+			String[] clauValor = camp.split(":", 2);
+			 
+			if (clauValor.length == 2) {
+		            String clau = clauValor[0].trim();
+		            String valor = clauValor[1].trim();
+
+		            if (clau.equals("Item")) {
+		                nom = valor;
+		            } else if (clau.equals("Wholesaler Price")) {
+		            	try {
+		                preu = Double.parseDouble(valor);
+		            	} catch (NumberFormatException e) {
+		            		System.out.println("Error: Precio incorrecto: " + valor);
+		            		return null;
+		            	}
+		            } else if (clau.equals("Stock")) {
+		            	try {
+		                estoc = Integer.parseInt(valor);
+		            	} catch (NumberFormatException e) {
+		            		System.out.println("Error: Stock incorrecto: " + valor);
+		            		return null;
+		            	}
+		            } 
+		        }
+		    }
+		
+		if (!line.contains("Item:") ||
+			    !line.contains("Wholesaler Price:") ||
+			    !line.contains("Stock:")) {
+
+			    System.out.println("Error: falta un campo obligatorio en: " + line);
+			    return null;
+			}
+		
+		
+		System.out.println("Nom: " + nom + ", Preu: " + preu + ", Estoc: " + estoc);
+		Product producte = new Product(nom, new Amount(preu), true, estoc);
+		return producte;
 	}
 
 	/**
@@ -275,7 +332,28 @@ public class Shop {
 	 */
 	public void addProduct() {
 		// TODO RA1-ISSUE-06: demanar dades minimes, crear un Product i afegir-lo a inventory.
-		System.out.println("RA1-ISSUE-06 pendent: encara no es poden afegir articles.");
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.print("Introdueix el nom del producte: ");
+	    String nom = scanner.nextLine();
+
+	    System.out.print("Introdueix el preu del producte: ");
+	    double preu = scanner.nextDouble();
+
+	    System.out.print("Introdueix l'estoc del producte: ");
+	    int estoc = scanner.nextInt();
+
+	    if (isInventoryFull()) {
+	        System.out.println("No es poden afegir més articles, l'inventari està ple.");
+	        return;
+	    }
+
+	    Product producte = new Product(nom, new Amount(preu), true, estoc);
+
+	    inventory.add(producte);
+	    numberProducts++;
+
+	    System.out.println("Producte afegit correctament.");
 	}
 
 	/**
@@ -291,7 +369,31 @@ public class Shop {
 	 */
 	public void addStock() {
 		// TODO RA1-ISSUE-07: trobar un Product i actualitzar el seu estoc.
-		System.out.println("RA1-ISSUE-07 pendent: encara no es pot modificar l'estoc.");
+		
+		Scanner scanner = CONSOLE;
+
+	    scanner.nextLine();
+
+	    System.out.print("Introdueix el nom del producte: ");
+	    String nom = scanner.nextLine().trim();
+
+	    Product producte = findProduct(nom);
+
+	    if (producte != null) {
+	        System.out.println("Producte trobat: " + producte);
+	        System.out.println("Estoc actual: " + producte.getStock());
+
+	        System.out.print("Introdueix el nou estoc: ");
+	        int estoc = scanner.nextInt();
+
+	        producte.setStock(estoc);
+	        saveInventory();
+
+	        System.out.println("Estoc actualitzat correctament.");
+	        System.out.println("Nou estoc: " + producte.getStock());
+	    } else {
+	        System.out.println("No s'ha trobat el producte: " + nom);
+	    }
 	}
 
 	/**
