@@ -1,3 +1,4 @@
-Item:Memoria RAM 16GB;Wholesaler Price:70.0;Stock:12;
-Item:Portatil oficina;Wholesaler Price:840.0;Stock:3;
-Item:Teclat mecanic;Wholesaler Price:90.0;Stock:6;
+Item:Memoria RAM 16GB;Wholesaler Price:140.0;Stock:12;
+Item:Portatil oficina;Wholesaler Price:1680.0;Stock:3;
+Item:Teclat mecanic;Wholesaler Price:180.0;Stock:6;
+Item:Altavoces;Wholesaler Price:500.0;Stock:5;
