@@ -239,9 +239,14 @@ public class Shop {
 				}
 			}
 			
+		} catch (FileNotFoundException e) {
+		    System.out.println("No s'ha trobat el fitxer d'inventari: " + f.getPath());
+			
 		} catch (IOException e) {
 			System.out.println("Error en llegir el fitxer: " + f.getPath());
 		}
+		
+		
 		
 		
 		// TODO RA1-ISSUE-04: delegar la conversio de cada linia a parseProductLine.
